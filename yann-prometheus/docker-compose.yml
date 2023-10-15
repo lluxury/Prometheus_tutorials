@@ -27,10 +27,15 @@ services:
       - '--storage.tsdb.retention.time=7d'  
     networks:
       - monitoring
+    links:
+      - alertmanager
+      - cadvisor
     expose:
       - '9090'
     ports:
       - 9090:9090
+    depends_on:
+      - cadvisor        
 
   alertmanager:
     image: prom/alertmanager:v0.25.0
@@ -48,3 +53,18 @@ services:
       - '9093'
     ports:
       - 9093:9093
+
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: cadvisor
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/snap/docker/common/var-lib-docker:/var/lib/docker:ro
+    networks:
+      - monitoring
+    expose:
+      - '8080'        
