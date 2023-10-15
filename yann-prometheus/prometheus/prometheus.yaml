@@ -32,3 +32,9 @@ scrape_configs:
       labels:
         instance: Prometheus服务器 
       
+  - job_name: 'node-exporter'
+    scrape_interval: 15s
+    static_configs:
+    - targets: ['node_exporter:9100']
+      labels:
+        instance: Prometheus服务器         
